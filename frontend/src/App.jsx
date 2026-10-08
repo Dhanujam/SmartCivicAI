@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { api } from './services/api';
 
 // Pages
@@ -34,7 +36,7 @@ function ProtectedRoute({ children, allowedRoles }) {
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-sky-400 animate-spin" />
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
       </div>
     );
   }
@@ -65,7 +67,7 @@ function HomeResolver() {
   if (isLoading) {
     return (
       <div className="flex-1 flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-sky-400 animate-spin" />
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
       </div>
     );
   }
@@ -79,6 +81,7 @@ function HomeResolver() {
 
 function MainApp() {
   const [health, setHealth] = useState(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const checkBackend = async () => {
@@ -95,8 +98,8 @@ function MainApp() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-sky-500 selection:text-white">
-      {/* Dynamic Role-Based Top Navigation */}
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 selection:bg-blue-600 selection:text-white transition-colors duration-200">
+      {/* Dynamic Role-Based Top Navigation with Theme & Language Controls */}
       <Navbar backendStatus={health?.status === 'healthy' ? 'online' : 'offline'} />
 
       {/* Main Page Content */}
@@ -175,10 +178,13 @@ function MainApp() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/80 py-5 px-6 text-center text-xs text-slate-500 bg-slate-950/80">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>SmartCivic AI — Civic Body Complaint Triage & Resolution Platform (HN-AI-02)</span>
-          <span className="font-mono text-slate-600">FastAPI • Gemini 2.5 • MongoDB Atlas • React 18</span>
+      <footer className="border-t border-slate-200 dark:border-slate-800 py-6 px-6 text-center text-xs text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-950 transition-colors duration-200">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="font-semibold text-slate-800 dark:text-slate-200">SmartCivic AI</span>
+            <span>— {t('footerTagline', 'Civic Body Complaint Triage & Resolution Platform')}</span>
+          </div>
+          <span className="font-mono text-slate-400 dark:text-slate-500">{t('footerStack', 'FastAPI • Gemini 2.5 • MongoDB Atlas • React 18')}</span>
         </div>
       </footer>
     </div>
@@ -188,9 +194,13 @@ function MainApp() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <MainApp />
-      </AuthProvider>
+      <ThemeProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <MainApp />
+          </AuthProvider>
+        </LanguageProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

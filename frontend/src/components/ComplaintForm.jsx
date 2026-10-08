@@ -462,18 +462,23 @@ export default function ComplaintForm({ onSuccess }) {
     if (cameraInputRef.current) cameraInputRef.current.value = '';
   };
 
+  // Dynamic step determination for visual stepper
+  const isStep1Done = Boolean(description.trim().length >= 5);
+  const isStep2Done = Boolean(locationAddress.trim() || latitude !== null);
+  const isStep3Done = Boolean(selectedImage);
+
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <div className="glass-panel rounded-3xl p-6 sm:p-10 border border-slate-800 shadow-2xl relative overflow-hidden">
-        {/* Decorative Top Accent Glow */}
-        <div className="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-sky-500/80 to-transparent blur-sm" />
+      <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm relative overflow-hidden">
+        {/* Subtle Top Accent */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500" />
 
         {/* Portal Header */}
-        <div className="mb-8">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5" />
-              Citizen Civic Reporting Portal
+        <div className="mb-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <span>Citizen Civic Reporting Portal</span>
             </div>
 
             {/* Reset Form Button */}
@@ -481,33 +486,107 @@ export default function ComplaintForm({ onSuccess }) {
               type="button"
               onClick={handleResetForm}
               disabled={loading}
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/80 hover:bg-slate-700/80 text-slate-400 hover:text-slate-200 text-xs transition border border-slate-700/60 disabled:opacity-40"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 text-xs transition border border-slate-200 disabled:opacity-40"
               title="Reset all form fields"
             >
               <RotateCcw className="w-3 h-3" />
-              <span>Reset</span>
+              <span>Reset Form</span>
             </button>
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Report a Civic Issue
           </h2>
-          <p className="text-slate-400 text-xs sm:text-sm mt-1.5 leading-relaxed">
+          <p className="text-slate-600 text-xs sm:text-sm mt-1.5 leading-relaxed">
             Report road hazards, sanitation backlogs, water leaks, or public safety issues.
             Google Gemini Multimodal AI evaluates severity, calculates an urgency score, routes
             the issue, and produces actionable municipal resolution steps.
           </p>
         </div>
 
-        {/* Quick Issue Category Presets */}
+        {/* Multi-Step Visual Workflow Stepper (Requirement 6) */}
+        <div className="mb-8 p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+          <div className="grid grid-cols-4 gap-2 text-center text-xs">
+            {/* Step 1: Details */}
+            <div className="flex flex-col items-center gap-1.5">
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition ${
+                  isStep1Done
+                    ? 'bg-emerald-100 text-emerald-700 border border-emerald-300'
+                    : 'bg-blue-600 text-white shadow-xs'
+                }`}
+              >
+                {isStep1Done ? <Check className="w-4 h-4" /> : '1'}
+              </div>
+              <span className={`text-[11px] font-semibold ${isStep1Done ? 'text-emerald-700' : 'text-blue-700'}`}>
+                1. Details
+              </span>
+            </div>
+
+            {/* Step 2: Location */}
+            <div className="flex flex-col items-center gap-1.5">
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition ${
+                  isStep2Done
+                    ? 'bg-emerald-100 text-emerald-700 border border-emerald-300'
+                    : isStep1Done
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-200 text-slate-500'
+                }`}
+              >
+                {isStep2Done ? <Check className="w-4 h-4" /> : '2'}
+              </div>
+              <span className={`text-[11px] font-semibold ${isStep2Done ? 'text-emerald-700' : isStep1Done ? 'text-blue-700' : 'text-slate-500'}`}>
+                2. Location
+              </span>
+            </div>
+
+            {/* Step 3: Photo */}
+            <div className="flex flex-col items-center gap-1.5">
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition ${
+                  isStep3Done
+                    ? 'bg-emerald-100 text-emerald-700 border border-emerald-300'
+                    : isStep2Done
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-200 text-slate-500'
+                }`}
+              >
+                {isStep3Done ? <Check className="w-4 h-4" /> : '3'}
+              </div>
+              <span className={`text-[11px] font-semibold ${isStep3Done ? 'text-emerald-700' : isStep2Done ? 'text-blue-700' : 'text-slate-500'}`}>
+                3. Photo
+              </span>
+            </div>
+
+            {/* Step 4: Submit */}
+            <div className="flex flex-col items-center gap-1.5">
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition ${
+                  isStep1Done && isStep2Done
+                    ? 'bg-blue-600 text-white shadow-xs'
+                    : 'bg-slate-200 text-slate-500'
+                }`}
+              >
+                4
+              </div>
+              <span className={`text-[11px] font-semibold ${isStep1Done && isStep2Done ? 'text-blue-700' : 'text-slate-500'}`}>
+                4. Submit
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Complaint Type Icon Cards (Requirement 6) */}
         <div className="mb-7">
-          <label className="block text-xs font-semibold text-slate-300 mb-2 flex items-center justify-between">
+          <label className="block text-xs font-semibold text-slate-700 mb-2.5 flex items-center justify-between">
             <span className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              Quick Issue Starters <span className="text-slate-500 font-normal">(Click to pre-fill)</span>
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <span>Select Issue Type or Quick-Start Template:</span>
             </span>
+            <span className="text-[11px] text-slate-500 font-normal">Click to auto-populate</span>
           </label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
             {QUICK_PRESETS.map((preset) => {
               const isSelected = activePreset === preset.id;
               return (
@@ -516,14 +595,14 @@ export default function ComplaintForm({ onSuccess }) {
                   type="button"
                   onClick={() => applyPreset(preset)}
                   disabled={loading}
-                  className={`flex items-center gap-2 p-2.5 rounded-xl border text-left text-xs transition disabled:opacity-50 ${
+                  className={`flex items-center gap-2.5 p-3 rounded-xl border text-left text-xs transition disabled:opacity-50 cursor-pointer ${
                     isSelected
-                      ? 'bg-sky-500/20 border-sky-500/60 text-sky-200 shadow-sm'
-                      : 'bg-slate-900/60 border-slate-800/90 hover:border-slate-700 text-slate-300 hover:text-white'
+                      ? 'bg-blue-50 border-blue-600 text-blue-900 shadow-xs ring-1 ring-blue-500/30'
+                      : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700 hover:bg-slate-50'
                   }`}
                 >
-                  <span className="text-sm select-none">{preset.icon}</span>
-                  <span className="truncate font-medium">{preset.label}</span>
+                  <span className="text-lg select-none">{preset.icon}</span>
+                  <span className="truncate font-semibold">{preset.label}</span>
                 </button>
               );
             })}
@@ -534,17 +613,17 @@ export default function ComplaintForm({ onSuccess }) {
         {error && (
           <div
             role="alert"
-            className="mb-6 p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs sm:text-sm flex items-start gap-3 animate-fadeIn"
+            className="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-xs sm:text-sm flex items-start gap-3 animate-fadeIn"
           >
-            <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-rose-600 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="font-semibold text-rose-200">Submission Notice</p>
-              <p className="mt-0.5 text-rose-300/90">{error}</p>
+              <p className="font-semibold text-rose-900">Submission Notice</p>
+              <p className="mt-0.5 text-rose-700">{error}</p>
             </div>
             <button
               type="button"
               onClick={() => setError(null)}
-              className="text-rose-400 hover:text-rose-200 p-1"
+              className="text-rose-500 hover:text-rose-700 p-1"
               title="Dismiss error"
             >
               <X className="w-4 h-4" />
@@ -558,10 +637,10 @@ export default function ComplaintForm({ onSuccess }) {
             <div className="flex items-center justify-between mb-1.5">
               <label
                 htmlFor="complaint_description"
-                className="block text-xs font-semibold text-slate-300 flex items-center gap-1.5"
+                className="block text-xs font-semibold text-slate-700 flex items-center gap-1.5"
               >
-                <FileText className="w-3.5 h-3.5 text-indigo-400" />
-                Problem Description <span className="text-rose-400 font-bold">*</span>
+                <FileText className="w-3.5 h-3.5 text-blue-600" />
+                <span>Problem Description</span> <span className="text-rose-500 font-bold">*</span>
               </label>
 
               <div className="flex items-center gap-3">
@@ -571,10 +650,10 @@ export default function ComplaintForm({ onSuccess }) {
                     type="button"
                     onClick={toggleSpeechRecognition}
                     disabled={loading}
-                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium border transition ${
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium border transition cursor-pointer ${
                       isListening
-                        ? 'bg-rose-500/20 text-rose-300 border-rose-500/40 animate-pulse'
-                        : 'bg-slate-800/80 text-slate-300 border-slate-700 hover:text-sky-300 hover:border-sky-500/40'
+                        ? 'bg-rose-50 text-rose-700 border-rose-300 animate-pulse'
+                        : 'bg-white text-slate-700 border-slate-200 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50/50'
                     }`}
                     title={
                       isListening
@@ -584,13 +663,13 @@ export default function ComplaintForm({ onSuccess }) {
                   >
                     {isListening ? (
                       <>
-                        <MicOff className="w-3 h-3 text-rose-400" />
+                        <MicOff className="w-3 h-3 text-rose-600" />
                         <span>Listening...</span>
                       </>
                     ) : (
                       <>
-                        <Mic className="w-3 h-3 text-sky-400" />
-                        <span>Dictate</span>
+                        <Mic className="w-3 h-3 text-blue-600" />
+                        <span>Voice Dictation</span>
                       </>
                     )}
                   </button>
@@ -617,10 +696,10 @@ export default function ComplaintForm({ onSuccess }) {
                 placeholder="Describe the issue in detail (e.g., location landmarks, severity, physical dimensions of pothole, flooding extent, how long it has persisted)..."
                 aria-required="true"
                 aria-invalid={descriptionTouched && !description.trim()}
-                className={`w-full px-4 py-3 rounded-xl bg-slate-900/80 border text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 transition disabled:opacity-50 resize-y min-h-[120px] ${
+                className={`w-full px-4 py-3 rounded-xl bg-white border text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 transition disabled:opacity-50 resize-y min-h-[120px] ${
                   descriptionTouched && !description.trim()
-                    ? 'border-rose-500/80 focus:ring-rose-500/30'
-                    : 'border-slate-700/80 focus:ring-sky-500/40 focus:border-sky-500'
+                    ? 'border-rose-400 focus:ring-rose-100 focus:border-rose-600'
+                    : 'border-slate-200 focus:ring-blue-100 focus:border-blue-600 shadow-xs'
                 }`}
               />
 
@@ -632,7 +711,7 @@ export default function ComplaintForm({ onSuccess }) {
                     setActivePreset(null);
                   }}
                   disabled={loading}
-                  className="absolute bottom-3 right-3 text-slate-500 hover:text-slate-300 text-xs p-1 bg-slate-800/80 rounded-md border border-slate-700/50"
+                  className="absolute bottom-3 right-3 text-slate-500 hover:text-slate-800 text-xs px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded-md border border-slate-200 transition"
                   title="Clear description text"
                 >
                   Clear
@@ -641,16 +720,141 @@ export default function ComplaintForm({ onSuccess }) {
             </div>
 
             {descriptionTouched && !description.trim() && (
-              <p className="mt-1 text-xs text-rose-400 flex items-center gap-1">
+              <p className="mt-1.5 text-xs text-rose-600 flex items-center gap-1 font-medium">
                 <AlertCircle className="w-3.5 h-3.5" />
                 Problem description is required so Google Gemini can triage the complaint.
               </p>
             )}
 
             {isListening && (
-              <div className="mt-1.5 p-2 rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-300 text-xs flex items-center gap-2 animate-pulse">
+              <div className="mt-2 p-2.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-xs flex items-center gap-2 animate-pulse">
                 <span className="w-2 h-2 rounded-full bg-rose-500" />
-                <span>Microphone active: Speak naturally. Your words will appear above...</span>
+                <span>Microphone active: Speak naturally. Your words will appear above in real time...</span>
+              </div>
+            )}
+          </div>
+
+          {/* Location & GPS Section */}
+          <div className="space-y-3">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label
+                  htmlFor="location_address"
+                  className="block text-xs font-semibold text-slate-700 flex items-center gap-1.5"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                  <span>Civic Location / Landmark Address</span>{' '}
+                  <span className="text-slate-400 font-normal">(Optional)</span>
+                </label>
+
+                {/* Detect GPS Button */}
+                <button
+                  type="button"
+                  onClick={handleDetectLocation}
+                  disabled={loading || isLocating}
+                  className="inline-flex items-center gap-1 text-[11px] text-blue-600 hover:text-blue-700 font-semibold transition disabled:opacity-50 cursor-pointer"
+                  title="Fetch current coordinates via device GPS"
+                >
+                  {isLocating ? (
+                    <>
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                      <span>Acquiring GPS...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Navigation className="w-3 h-3" />
+                      <span>Detect GPS Location</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              <div className="relative">
+                <input
+                  id="location_address"
+                  type="text"
+                  value={locationAddress}
+                  onChange={(e) => setLocationAddress(e.target.value)}
+                  disabled={loading}
+                  placeholder="e.g., Near City Hospital Gate 2, Cross Road 5, Sector 12"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-600 transition disabled:opacity-50 shadow-xs"
+                />
+              </div>
+            </div>
+
+            {/* GPS Status and Coordinate Badges */}
+            {(latitude !== null || locationStatus) && (
+              <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+                <div className="flex items-center gap-2">
+                  <Crosshair className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
+                  <span className="text-slate-700 font-medium">
+                    {locationStatus || `GPS: ${latitude}, ${longitude}`}
+                  </span>
+                  {gpsAccuracy && (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white text-slate-600 border border-slate-200 font-medium">
+                      ±{gpsAccuracy}m accuracy
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowManualCoords(!showManualCoords)}
+                    className="text-[11px] text-blue-600 hover:underline flex items-center gap-1 font-medium"
+                  >
+                    <Sliders className="w-3 h-3" />
+                    {showManualCoords ? 'Hide coordinates' : 'Fine-tune coordinates'}
+                  </button>
+                  {latitude !== null && (
+                    <button
+                      type="button"
+                      onClick={handleClearLocation}
+                      className="text-slate-400 hover:text-rose-600 p-0.5"
+                      title="Clear GPS"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Optional Manual GPS Coordinates fields */}
+            {showManualCoords && (
+              <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200 animate-fadeIn">
+                <div>
+                  <label htmlFor="latitude" className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    Latitude
+                  </label>
+                  <input
+                    id="latitude"
+                    type="number"
+                    step="any"
+                    value={latitude ?? ''}
+                    onChange={(e) =>
+                      setLatitude(e.target.value === '' ? null : parseFloat(e.target.value))
+                    }
+                    placeholder="e.g. 28.6139"
+                    className="w-full px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="longitude" className="block text-[11px] font-semibold text-slate-600 mb-1">
+                    Longitude
+                  </label>
+                  <input
+                    id="longitude"
+                    type="number"
+                    step="any"
+                    value={longitude ?? ''}
+                    onChange={(e) =>
+                      setLongitude(e.target.value === '' ? null : parseFloat(e.target.value))
+                    }
+                    placeholder="e.g. 77.2090"
+                    className="w-full px-3 py-2 rounded-lg bg-white border border-slate-200 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600"
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -658,9 +862,9 @@ export default function ComplaintForm({ onSuccess }) {
           {/* Photographic Evidence (Multimodal AI Vision Support) */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-semibold text-slate-300 flex items-center gap-1.5">
-                <Camera className="w-3.5 h-3.5 text-emerald-400" />
-                Photographic Evidence{' '}
+              <label className="block text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                <Camera className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Photographic Evidence</span>{' '}
                 <span className="text-slate-500 font-normal">(Recommended for Gemini Vision)</span>
               </label>
 
@@ -669,10 +873,10 @@ export default function ComplaintForm({ onSuccess }) {
                 type="button"
                 onClick={() => cameraInputRef.current?.click()}
                 disabled={loading}
-                className="inline-flex items-center gap-1 text-[11px] text-emerald-400 hover:text-emerald-300 font-medium transition"
+                className="inline-flex items-center gap-1 text-[11px] text-emerald-600 hover:text-emerald-700 font-semibold transition cursor-pointer"
               >
                 <Camera className="w-3 h-3" />
-                Take Photo
+                <span>Take Photo</span>
               </button>
             </div>
 
@@ -684,28 +888,28 @@ export default function ComplaintForm({ onSuccess }) {
                 onClick={() => fileInputRef.current?.click()}
                 className={`group border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition ${
                   isDragging
-                    ? 'border-sky-400 bg-sky-500/10'
-                    : 'border-slate-700 hover:border-sky-500/60 bg-slate-900/40 hover:bg-slate-900/70'
+                    ? 'border-blue-500 bg-blue-50/70'
+                    : 'border-slate-300 hover:border-blue-500 bg-slate-50/70 hover:bg-slate-50'
                 }`}
               >
-                <div className="w-12 h-12 rounded-xl bg-slate-800 group-hover:bg-sky-500/20 text-slate-400 group-hover:text-sky-400 flex items-center justify-center mx-auto mb-3 transition">
+                <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 group-hover:border-blue-300 text-slate-500 group-hover:text-blue-600 flex items-center justify-center mx-auto mb-3 transition shadow-xs">
                   <Upload className="w-5 h-5" />
                 </div>
-                <p className="text-xs font-semibold text-slate-300 group-hover:text-white transition">
+                <p className="text-xs font-bold text-slate-800 group-hover:text-blue-600 transition">
                   Click or drag and drop photo evidence here
                 </p>
                 <p className="text-[11px] text-slate-500 mt-1">
                   Supports JPEG, PNG, WEBP, GIF, HEIC (Up to 10MB)
                 </p>
-                <p className="text-[10px] text-emerald-400/90 mt-2 flex items-center justify-center gap-1 font-medium">
-                  <Sparkles className="w-3 h-3" />
-                  Gemini multimodal vision triage analyzes visual severity directly
+                <p className="text-[11px] text-emerald-700 mt-2 flex items-center justify-center gap-1 font-semibold">
+                  <Sparkles className="w-3 h-3 text-emerald-600" />
+                  Gemini multimodal vision triage evaluates physical hazard size and urgency
                 </p>
               </div>
             ) : (
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-900/90 border border-slate-700 shadow-md">
+              <div className="flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200 shadow-xs">
                 {imagePreview && (
-                  <div className="w-16 h-16 rounded-xl overflow-hidden border border-slate-700 flex-shrink-0 bg-black">
+                  <div className="w-16 h-16 rounded-xl overflow-hidden border border-slate-200 flex-shrink-0 bg-white">
                     <img
                       src={imagePreview}
                       alt="Uploaded civic evidence preview"
@@ -715,15 +919,15 @@ export default function ComplaintForm({ onSuccess }) {
                 )}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <p className="text-xs font-bold text-white truncate">
+                    <p className="text-xs font-bold text-slate-900 truncate">
                       {selectedImage.name}
                     </p>
-                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-semibold flex items-center gap-1 flex-shrink-0">
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-200 text-emerald-700 text-[10px] font-bold flex items-center gap-1 flex-shrink-0">
                       <Sparkles className="w-2.5 h-2.5" />
                       Vision Ready
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-slate-500 mt-0.5">
                     {formatFileSize(selectedImage.size)} • {selectedImage.type || 'Image'}
                   </p>
                 </div>
@@ -731,7 +935,7 @@ export default function ComplaintForm({ onSuccess }) {
                   type="button"
                   onClick={handleRemoveImage}
                   disabled={loading}
-                  className="p-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 transition border border-slate-700"
+                  className="p-2 rounded-xl bg-white hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition border border-slate-200 hover:border-rose-200 cursor-pointer"
                   title="Remove image"
                 >
                   <X className="w-4 h-4" />
@@ -758,137 +962,12 @@ export default function ComplaintForm({ onSuccess }) {
             />
           </div>
 
-          {/* Location & GPS Section */}
-          <div className="space-y-3">
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label
-                  htmlFor="location_address"
-                  className="block text-xs font-semibold text-slate-300 flex items-center gap-1.5"
-                >
-                  <MapPin className="w-3.5 h-3.5 text-rose-400" />
-                  Civic Location / Landmark Address{' '}
-                  <span className="text-slate-500 font-normal">(Optional)</span>
-                </label>
-
-                {/* Detect GPS Button */}
-                <button
-                  type="button"
-                  onClick={handleDetectLocation}
-                  disabled={loading || isLocating}
-                  className="inline-flex items-center gap-1 text-[11px] text-sky-400 hover:text-sky-300 font-medium transition disabled:opacity-50"
-                  title="Fetch current coordinates via device GPS"
-                >
-                  {isLocating ? (
-                    <>
-                      <Loader2 className="w-3 h-3 animate-spin" />
-                      Locating...
-                    </>
-                  ) : (
-                    <>
-                      <Navigation className="w-3 h-3" />
-                      Detect GPS Location
-                    </>
-                  )}
-                </button>
-              </div>
-
-              <div className="relative">
-                <input
-                  id="location_address"
-                  type="text"
-                  value={locationAddress}
-                  onChange={(e) => setLocationAddress(e.target.value)}
-                  disabled={loading}
-                  placeholder="e.g., Near City Hospital Gate 2, Cross Road 5, Sector 12"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-slate-700/80 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition disabled:opacity-50"
-                />
-              </div>
-            </div>
-
-            {/* GPS Status and Coordinate Badges */}
-            {(latitude !== null || locationStatus) && (
-              <div className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-xs">
-                <div className="flex items-center gap-2">
-                  <Crosshair className="w-3.5 h-3.5 text-sky-400 flex-shrink-0" />
-                  <span className="text-slate-300">
-                    {locationStatus || `GPS: ${latitude}, ${longitude}`}
-                  </span>
-                  {gpsAccuracy && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-slate-700">
-                      ±{gpsAccuracy}m
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowManualCoords(!showManualCoords)}
-                    className="text-[11px] text-sky-400 hover:underline flex items-center gap-1"
-                  >
-                    <Sliders className="w-3 h-3" />
-                    {showManualCoords ? 'Hide coordinates' : 'Fine-tune coordinates'}
-                  </button>
-                  {latitude !== null && (
-                    <button
-                      type="button"
-                      onClick={handleClearLocation}
-                      className="text-slate-400 hover:text-rose-400 p-0.5"
-                      title="Clear GPS"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Optional Manual GPS Coordinates fields */}
-            {showManualCoords && (
-              <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 animate-fadeIn">
-                <div>
-                  <label htmlFor="latitude" className="block text-[11px] text-slate-400 mb-1">
-                    Latitude
-                  </label>
-                  <input
-                    id="latitude"
-                    type="number"
-                    step="any"
-                    value={latitude ?? ''}
-                    onChange={(e) =>
-                      setLatitude(e.target.value === '' ? null : parseFloat(e.target.value))
-                    }
-                    placeholder="e.g. 28.6139"
-                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-sky-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="longitude" className="block text-[11px] text-slate-400 mb-1">
-                    Longitude
-                  </label>
-                  <input
-                    id="longitude"
-                    type="number"
-                    step="any"
-                    value={longitude ?? ''}
-                    onChange={(e) =>
-                      setLongitude(e.target.value === '' ? null : parseFloat(e.target.value))
-                    }
-                    placeholder="e.g. 77.2090"
-                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-sky-500"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-
           {/* Citizen Details & Confidentiality Toggle */}
-          <div className="p-4 sm:p-5 rounded-2xl bg-slate-900/50 border border-slate-800/90 space-y-4">
+          <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-sky-400" />
-                <span className="text-xs font-semibold text-slate-200">
+                <ShieldCheck className="w-4 h-4 text-blue-600" />
+                <span className="text-xs font-bold text-slate-800">
                   Citizen Information & Privacy
                 </span>
               </div>
@@ -900,20 +979,20 @@ export default function ComplaintForm({ onSuccess }) {
                   checked={isAnonymous}
                   onChange={(e) => setIsAnonymous(e.target.checked)}
                   disabled={loading}
-                  className="w-4 h-4 rounded text-sky-500 bg-slate-900 border-slate-700 focus:ring-sky-500/40 focus:ring-offset-slate-950 cursor-pointer"
+                  className="w-4 h-4 rounded text-blue-600 bg-white border-slate-300 focus:ring-blue-500 cursor-pointer"
                 />
-                <span className="text-xs font-medium text-slate-300">
+                <span className="text-xs font-semibold text-slate-700">
                   File Anonymously
                 </span>
               </label>
             </div>
 
             {isAnonymous ? (
-              <div className="p-3 rounded-xl bg-sky-500/10 border border-sky-500/20 text-xs text-sky-300 flex items-center gap-2.5">
-                <Shield className="w-4 h-4 text-sky-400 flex-shrink-0" />
+              <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-800 flex items-center gap-2.5">
+                <Shield className="w-4 h-4 text-blue-600 flex-shrink-0" />
                 <span>
                   Anonymous mode active. Your name and contact details will not be recorded.
-                  The complaint will be cataloged under municipal public registry.
+                  The complaint will be registered publicly under the municipal dispatch registry.
                 </span>
               </div>
             ) : (
@@ -922,10 +1001,10 @@ export default function ComplaintForm({ onSuccess }) {
                 <div>
                   <label
                     htmlFor="citizen_name"
-                    className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5"
+                    className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5"
                   >
-                    <User className="w-3.5 h-3.5 text-sky-400" />
-                    Full Name <span className="text-slate-500 font-normal">(Optional)</span>
+                    <User className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Full Name</span> <span className="text-slate-400 font-normal">(Optional)</span>
                   </label>
                   <input
                     id="citizen_name"
@@ -934,7 +1013,7 @@ export default function ComplaintForm({ onSuccess }) {
                     onChange={(e) => setCitizenName(e.target.value)}
                     disabled={loading}
                     placeholder="e.g., Alex Johnson"
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition disabled:opacity-50"
+                    className="w-full px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-600 transition disabled:opacity-50 shadow-xs"
                   />
                 </div>
 
@@ -942,10 +1021,10 @@ export default function ComplaintForm({ onSuccess }) {
                 <div>
                   <label
                     htmlFor="citizen_contact"
-                    className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5"
+                    className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1.5"
                   >
-                    <Phone className="w-3.5 h-3.5 text-indigo-400" />
-                    Phone or Email <span className="text-slate-500 font-normal">(Optional)</span>
+                    <Phone className="w-3.5 h-3.5 text-indigo-600" />
+                    <span>Phone or Email</span> <span className="text-slate-400 font-normal">(Optional)</span>
                   </label>
                   <input
                     id="citizen_contact"
@@ -954,7 +1033,7 @@ export default function ComplaintForm({ onSuccess }) {
                     onChange={(e) => setCitizenContact(e.target.value)}
                     disabled={loading}
                     placeholder="e.g., +1 555-0199 or alex@email.com"
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition disabled:opacity-50"
+                    className="w-full px-4 py-2 rounded-xl bg-white border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-600 transition disabled:opacity-50 shadow-xs"
                   />
                   <p className="text-[10px] text-slate-500 mt-1">
                     Used exclusively for municipal resolution SMS/email notifications.
@@ -969,7 +1048,7 @@ export default function ComplaintForm({ onSuccess }) {
             <button
               type="submit"
               disabled={loading || !description.trim()}
-              className="w-full py-4 px-6 rounded-2xl font-bold text-sm text-white bg-gradient-to-r from-sky-500 via-indigo-600 to-sky-600 hover:from-sky-400 hover:via-indigo-500 hover:to-sky-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-sky-500/25 transition cursor-pointer flex items-center justify-center gap-2 transform active:scale-[0.99]"
+              className="w-full py-4 px-6 rounded-xl font-bold text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-blue-500/20 transition cursor-pointer flex items-center justify-center gap-2 transform active:scale-[0.99]"
             >
               {loading ? (
                 <>
@@ -978,7 +1057,7 @@ export default function ComplaintForm({ onSuccess }) {
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-sky-200" />
+                  <Sparkles className="w-4 h-4 text-blue-200" />
                   <span>Submit Complaint for AI Triage & Resolution</span>
                 </>
               )}
@@ -986,22 +1065,22 @@ export default function ComplaintForm({ onSuccess }) {
 
             {/* Dynamic Step-by-Step AI Progress Indicator */}
             {loading && loadingStep && (
-              <div className="mt-4 p-3.5 rounded-xl bg-sky-950/40 border border-sky-500/30 text-sky-300 text-xs flex items-center justify-center gap-2 animate-fadeIn">
-                <span className="w-2 h-2 rounded-full bg-sky-400 animate-ping" />
-                <span className="font-medium">{loadingStep}</span>
+              <div className="mt-4 p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-800 text-xs flex items-center justify-center gap-2 animate-fadeIn">
+                <span className="w-2 h-2 rounded-full bg-blue-600 animate-ping" />
+                <span className="font-semibold">{loadingStep}</span>
               </div>
             )}
           </div>
 
           {/* Bottom Security / Trust Footer */}
-          <div className="pt-3 border-t border-slate-800/60 flex flex-wrap items-center justify-between text-[11px] text-slate-500 gap-2">
+          <div className="pt-3 border-t border-slate-200 flex flex-wrap items-center justify-between text-[11px] text-slate-500 gap-2">
             <span className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              Cybersecurity Shield Active • AI Prompt Firewall • DPDP PII Protection
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Cybersecurity Shield Active • AI Prompt Firewall • DPDP PII Protection</span>
             </span>
             <span className="flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-sky-400" />
-              Gemini Multimodal AI (HN-AI-02)
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <span>Gemini Multimodal AI</span>
             </span>
           </div>
         </form>

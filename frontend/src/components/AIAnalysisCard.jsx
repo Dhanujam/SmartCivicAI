@@ -34,38 +34,38 @@ export default function AIAnalysisCard({ complaint, onReset }) {
     estimated_resolution_time,
   } = ai_analysis;
 
-  // Urgency styling mapping
+  // Urgency styling mapping for light theme
   const urgencyUpper = (urgency || '').toUpperCase();
   const getUrgencyConfig = (level) => {
     switch (level) {
       case 'CRITICAL':
         return {
           label: 'CRITICAL',
-          badgeClass: 'bg-rose-500/15 text-rose-400 border-rose-500/40 animate-pulse',
-          barColor: 'from-rose-600 to-rose-500',
-          textColor: 'text-rose-400',
+          badgeClass: 'bg-rose-50 text-rose-700 border-rose-200 animate-pulse',
+          barColor: 'from-rose-500 to-red-600',
+          textColor: 'text-rose-600',
         };
       case 'HIGH':
         return {
           label: 'HIGH',
-          badgeClass: 'bg-orange-500/15 text-orange-400 border-orange-500/40',
+          badgeClass: 'bg-orange-50 text-orange-700 border-orange-200',
           barColor: 'from-orange-500 to-amber-500',
-          textColor: 'text-orange-400',
+          textColor: 'text-orange-600',
         };
       case 'MEDIUM':
         return {
           label: 'MEDIUM',
-          badgeClass: 'bg-amber-500/15 text-amber-400 border-amber-500/40',
-          barColor: 'from-amber-500 to-yellow-400',
-          textColor: 'text-amber-400',
+          badgeClass: 'bg-amber-50 text-amber-700 border-amber-200',
+          barColor: 'from-amber-400 to-yellow-500',
+          textColor: 'text-amber-600',
         };
       case 'LOW':
       default:
         return {
           label: 'LOW',
-          badgeClass: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/40',
-          barColor: 'from-emerald-500 to-teal-400',
-          textColor: 'text-emerald-400',
+          badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+          barColor: 'from-emerald-400 to-teal-500',
+          textColor: 'text-emerald-600',
         };
     }
   };
@@ -74,10 +74,10 @@ export default function AIAnalysisCard({ complaint, onReset }) {
 
   // Priority score color class
   const getScoreColor = (score) => {
-    if (score >= 80) return 'text-rose-400';
-    if (score >= 60) return 'text-orange-400';
-    if (score >= 40) return 'text-amber-400';
-    return 'text-emerald-400';
+    if (score >= 80) return 'text-rose-600';
+    if (score >= 60) return 'text-orange-600';
+    if (score >= 40) return 'text-amber-600';
+    return 'text-emerald-600';
   };
 
   const backendBase = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
@@ -86,27 +86,27 @@ export default function AIAnalysisCard({ complaint, onReset }) {
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6 animate-fadeIn">
       {/* Success Notification Banner */}
-      <div className="glass-panel rounded-2xl p-6 border border-emerald-500/30 bg-emerald-950/20 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-emerald-50/80 rounded-2xl p-6 border border-emerald-200 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 flex-shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-emerald-700 flex-shrink-0">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              Complaint Registered & Triaged
-              <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-sky-500/10 text-sky-300 border border-sky-500/30">
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <span>Complaint Registered & Triaged</span>
+              <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-white text-blue-700 border border-blue-200 font-bold">
                 {complaint.complaint_id || complaint.id}
               </span>
             </h2>
-            <p className="text-xs text-slate-400">
-              Assigned ID <strong className="text-white font-mono">{complaint.complaint_id || complaint.id}</strong> • Status: <span className="text-sky-400 font-semibold">{complaint.status || 'REQUESTED'}</span>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Assigned ID <strong className="text-slate-800 font-mono">{complaint.complaint_id || complaint.id}</strong> • Status: <span className="text-blue-700 font-semibold">{complaint.status || 'REQUESTED'}</span>
             </p>
           </div>
         </div>
 
         <button
           onClick={onReset}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition shadow-sm"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-200 transition shadow-xs cursor-pointer"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>Report Another Issue</span>
@@ -115,13 +115,13 @@ export default function AIAnalysisCard({ complaint, onReset }) {
 
       {/* Duplicate Notice Banner if found */}
       {complaint.duplicate_found && (
-        <div className="glass-panel rounded-2xl p-4 sm:p-5 border border-amber-500/30 bg-amber-950/20 text-amber-200 text-xs flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+        <div className="bg-amber-50 rounded-2xl p-4 sm:p-5 border border-amber-200 text-amber-900 text-xs flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-bold text-sm text-amber-300">
+            <p className="font-bold text-sm text-amber-900">
               Potential Duplicate Complaints Found in Municipal Registry
             </p>
-            <p className="text-amber-300/80 mt-0.5">
+            <p className="text-amber-800/90 mt-0.5">
               Similar complaints already exist for this location or problem ({complaint.duplicate_complaint_ids?.length || 1} related). The municipal department will cross-reference your submission.
             </p>
           </div>
@@ -129,30 +129,29 @@ export default function AIAnalysisCard({ complaint, onReset }) {
       )}
 
       {/* Main Analysis Card */}
-      <div className="glass-panel rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-2xl space-y-8">
-        
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-7">
         {/* Top Triage Metrics Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Category */}
-          <div className="glass-card rounded-2xl p-4 border border-slate-800/80">
-            <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5 mb-1.5">
-              <FileText className="w-3.5 h-3.5 text-sky-400" />
+          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5 mb-1.5">
+              <FileText className="w-3.5 h-3.5 text-blue-600" />
               Civic Category
             </span>
-            <div className="text-sm font-bold text-white tracking-tight">
+            <div className="text-sm font-bold text-slate-900 tracking-tight">
               {category}
             </div>
           </div>
 
           {/* Urgency */}
-          <div className="glass-card rounded-2xl p-4 border border-slate-800/80">
-            <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5 mb-1.5">
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5 mb-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
               Urgency Level
             </span>
             <div>
               <span
-                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold border ${urgencyConfig.badgeClass}`}
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border ${urgencyConfig.badgeClass}`}
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-current" />
                 {urgencyConfig.label}
@@ -161,36 +160,36 @@ export default function AIAnalysisCard({ complaint, onReset }) {
           </div>
 
           {/* Department */}
-          <div className="glass-card rounded-2xl p-4 border border-slate-800/80">
-            <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5 mb-1.5">
-              <Building2 className="w-3.5 h-3.5 text-indigo-400" />
+          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5 mb-1.5">
+              <Building2 className="w-3.5 h-3.5 text-indigo-600" />
               Assigned Department
             </span>
-            <div className="text-sm font-bold text-white truncate" title={department}>
+            <div className="text-sm font-bold text-slate-900 truncate" title={department}>
               {department}
             </div>
           </div>
 
           {/* Estimated Resolution Time */}
-          <div className="glass-card rounded-2xl p-4 border border-slate-800/80">
-            <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5 mb-1.5">
-              <Clock className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+            <span className="text-xs font-semibold text-slate-500 flex items-center gap-1.5 mb-1.5">
+              <Clock className="w-3.5 h-3.5 text-emerald-600" />
               Estimated Timeframe
             </span>
-            <div className="text-sm font-bold text-slate-100">
+            <div className="text-sm font-bold text-slate-900">
               {estimated_resolution_time}
             </div>
           </div>
         </div>
 
         {/* Priority Score Bar & Location Row */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-1">
           {/* Priority Score Gauge */}
-          <div className="md:col-span-2 glass-card rounded-2xl p-5 border border-slate-800/80 flex flex-col justify-between">
+          <div className="md:col-span-2 bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                  <ShieldAlert className="w-4 h-4 text-sky-400" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
+                  <ShieldAlert className="w-4 h-4 text-blue-600" />
                   Priority Score
                 </span>
                 <span className={`text-2xl font-black ${getScoreColor(priority_score)}`}>
@@ -199,7 +198,7 @@ export default function AIAnalysisCard({ complaint, onReset }) {
               </div>
               
               {/* Visual Progress Bar */}
-              <div className="w-full h-3 bg-slate-900 rounded-full overflow-hidden border border-slate-800 p-0.5">
+              <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden p-0.5">
                 <div
                   className={`h-full rounded-full bg-gradient-to-r ${urgencyConfig.barColor} transition-all duration-1000 ease-out`}
                   style={{ width: `${Math.max(5, Math.min(100, priority_score))}%` }}
@@ -207,36 +206,36 @@ export default function AIAnalysisCard({ complaint, onReset }) {
               </div>
             </div>
 
-            <p className="text-xs text-slate-400 mt-3 italic border-t border-slate-800/60 pt-2.5">
-              <span className="font-semibold text-slate-300 not-italic">Priority Reason:</span> {priority_reason}
+            <p className="text-xs text-slate-600 mt-3 italic border-t border-slate-200/80 pt-2.5">
+              <span className="font-semibold text-slate-800 not-italic">Priority Reason:</span> {priority_reason}
             </p>
           </div>
 
           {/* Location Details */}
-          <div className="glass-card rounded-2xl p-5 border border-slate-800/80 flex flex-col justify-between">
+          <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5 mb-2">
-                <MapPin className="w-4 h-4 text-rose-400" />
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 mb-2">
+                <MapPin className="w-4 h-4 text-rose-500" />
                 Verified Location
               </span>
-              <p className="text-sm font-bold text-white">
+              <p className="text-sm font-bold text-slate-900">
                 {location || 'Not specified'}
               </p>
               {complaint.latitude !== null && complaint.latitude !== undefined && complaint.longitude !== null && complaint.longitude !== undefined && (
-                <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-sky-500/10 border border-sky-500/20 text-sky-300 font-mono text-[11px]">
+                <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-blue-700 font-mono text-[11px] font-medium">
                   <span>GPS:</span>
                   <span>{complaint.latitude.toFixed(4)}°, {complaint.longitude.toFixed(4)}°</span>
                 </div>
               )}
             </div>
             {complaint.citizen_name && (
-              <div className="text-xs text-slate-500 flex flex-col gap-0.5 mt-3 pt-2 border-t border-slate-800/60">
+              <div className="text-xs text-slate-500 flex flex-col gap-0.5 mt-3 pt-2 border-t border-slate-200/80">
                 <div className="flex items-center gap-1.5">
                   <User className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Reported by: <span className="text-slate-300 font-medium">{complaint.citizen_name}</span></span>
+                  <span>Reported by: <span className="text-slate-800 font-medium">{complaint.citizen_name}</span></span>
                 </div>
                 {complaint.citizen_contact && (
-                  <span className="text-[11px] text-slate-400 pl-5 font-mono">
+                  <span className="text-[11px] text-slate-600 pl-5 font-mono">
                     {complaint.citizen_contact}
                   </span>
                 )}
@@ -246,57 +245,57 @@ export default function AIAnalysisCard({ complaint, onReset }) {
         </div>
 
         {/* Problem Summary */}
-        <div className="glass-card rounded-2xl p-5 border border-slate-800/80">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2 flex items-center gap-2">
-            <Sparkles className="w-3.5 h-3.5 text-sky-400" />
+        <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 flex items-center gap-2">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
             AI Problem Summary
           </h3>
-          <p className="text-slate-200 text-sm leading-relaxed">
+          <p className="text-slate-800 text-sm leading-relaxed">
             {problem_summary}
           </p>
         </div>
 
         {/* FEATURED: Recommended Practical Solution (Project Differentiator) */}
-        <div className="relative rounded-2xl p-6 sm:p-7 bg-gradient-to-br from-sky-950/70 via-indigo-950/60 to-slate-900 border-2 border-sky-500/40 shadow-xl shadow-sky-500/10 overflow-hidden">
-          <div className="absolute top-0 right-0 px-3 py-1 bg-sky-500/20 border-b border-l border-sky-500/40 rounded-bl-xl text-[10px] font-extrabold uppercase tracking-widest text-sky-300">
+        <div className="relative rounded-2xl p-6 sm:p-7 bg-blue-50/70 border-2 border-blue-200 shadow-xs overflow-hidden">
+          <div className="absolute top-0 right-0 px-3 py-1 bg-blue-100 border-b border-l border-blue-200 rounded-bl-xl text-[10px] font-extrabold uppercase tracking-widest text-blue-800">
             HN-AI-02 Core Differentiator
           </div>
 
           <div className="flex items-start gap-3.5 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-500/50 flex items-center justify-center text-sky-300 flex-shrink-0 shadow-md shadow-sky-500/20">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white flex-shrink-0 shadow-xs">
               <Wrench className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-white tracking-tight flex items-center gap-2">
+              <h3 className="text-base font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
                 Recommended Department Action Plan
               </h3>
-              <p className="text-xs text-sky-200/80">
+              <p className="text-xs text-slate-600">
                 Actionable engineering guidance provided directly to field responders
               </p>
             </div>
           </div>
 
-          <div className="mt-3 p-4 rounded-xl bg-slate-950/60 border border-sky-500/20 text-slate-100 font-medium text-sm sm:text-base leading-relaxed">
+          <div className="mt-3 p-4 rounded-xl bg-white border border-blue-200 text-slate-800 font-medium text-sm sm:text-base leading-relaxed">
             {recommended_solution}
           </div>
         </div>
 
         {/* Resolution Steps (Numbered Action Items) */}
         <div>
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
-            <ArrowRight className="w-3.5 h-3.5 text-indigo-400" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+            <ArrowRight className="w-3.5 h-3.5 text-blue-600" />
             Field Officer Action Steps ({resolution_steps.length} Steps)
           </h3>
           <div className="space-y-2.5">
             {resolution_steps.map((step, idx) => (
               <div
                 key={idx}
-                className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-900/60 border border-slate-800/80 hover:border-slate-700 transition"
+                className="flex items-start gap-3.5 p-3.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition"
               >
-                <div className="w-7 h-7 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300 font-mono text-xs font-bold flex-shrink-0 mt-0.5">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-700 font-mono text-xs font-bold flex-shrink-0 mt-0.5">
                   {idx + 1}
                 </div>
-                <p className="text-xs sm:text-sm text-slate-200 leading-normal">
+                <p className="text-xs sm:text-sm text-slate-800 leading-normal">
                   {step}
                 </p>
               </div>
@@ -306,12 +305,12 @@ export default function AIAnalysisCard({ complaint, onReset }) {
 
         {/* Uploaded Evidence Image if present */}
         {fullImageUrl && (
-          <div className="border-t border-slate-800/80 pt-6">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
-              <ImageIcon className="w-3.5 h-3.5 text-sky-400" />
+          <div className="border-t border-slate-250 pt-6">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
+              <ImageIcon className="w-3.5 h-3.5 text-blue-600" />
               Attached Photographic Evidence
             </h3>
-            <div className="inline-block rounded-2xl overflow-hidden border border-slate-700/80 max-w-md bg-slate-950">
+            <div className="inline-block rounded-2xl overflow-hidden border border-slate-200 max-w-md bg-slate-100 shadow-xs">
               <img
                 src={fullImageUrl}
                 alt="Complaint evidence"
@@ -325,19 +324,18 @@ export default function AIAnalysisCard({ complaint, onReset }) {
         )}
 
         {/* Bottom Action Footer */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-800/80">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200">
           <div className="text-xs text-slate-500">
-            Registered at: <span className="text-slate-400">{new Date(complaint.created_at).toLocaleString()}</span>
+            Registered at: <span className="text-slate-700 font-medium">{new Date(complaint.created_at).toLocaleString()}</span>
           </div>
           <button
             onClick={onReset}
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white text-xs font-bold shadow-lg shadow-sky-500/20 transition cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs transition cursor-pointer"
           >
             <RotateCcw className="w-4 h-4" />
-            File Another Civic Complaint
+            <span>File Another Civic Complaint</span>
           </button>
         </div>
-
       </div>
     </div>
   );
