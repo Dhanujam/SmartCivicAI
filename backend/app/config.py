@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     DB_NAME: str = "smartcivic"
     DATABASE_NAME: Optional[str] = None
     GEMINI_API_KEY: str = ""
-    GEMINI_MODEL: str = "gemini-3.5-flash"
+    GEMINI_MODEL: str = "gemini-2.5-flash"
 
     # JWT Authentication
     JWT_SECRET: str = "smartcivic_super_secret_jwt_key_hackathon_2026_dev"
@@ -31,7 +31,7 @@ class Settings(BaseSettings):
 
     @property
     def cors_origin_list(self) -> List[str]:
-        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
+        return [origin.strip().strip('"\'') for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
 
     @property
     def database_name(self) -> str:

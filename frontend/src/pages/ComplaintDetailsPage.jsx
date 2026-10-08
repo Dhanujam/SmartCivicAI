@@ -107,7 +107,7 @@ export default function ComplaintDetailsPage() {
     merged_complaint_ids = [],
   } = complaint;
 
-  const backendBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+  const backendBase = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
   const fullImageUrl = image_url ? `${backendBase}${image_url}` : null;
 
   const isMerged = status === 'MERGED';

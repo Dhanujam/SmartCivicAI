@@ -80,7 +80,7 @@ export default function AIAnalysisCard({ complaint, onReset }) {
     return 'text-emerald-400';
   };
 
-  const backendBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+  const backendBase = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '');
   const fullImageUrl = complaint.image_url ? `${backendBase}${complaint.image_url}` : null;
 
   return (
