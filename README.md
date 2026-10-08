@@ -113,7 +113,7 @@ SmartCivicAI/
    npm run dev
    ```
    The frontend will be available at `http://localhost:5173`.
-## 🧰 Technology Stack
+## Technology Stack
 
 | Layer | Technology |
 |---|---|
@@ -130,5 +130,56 @@ SmartCivicAI/
 | Maps | OpenStreetMap |
 | Security | Log Sentinel |
 | Deployment | Render |
+
+
+## Key Features
+
+- **Text & Image Complaints**  
+  Citizens can report civic issues using written descriptions and supporting photographs.
+
+- **AI-Powered Classification**  
+  Google Gemini analyzes complaint content and identifies the relevant civic issue category.
+
+- **Urgency Assessment**  
+  Complaints are evaluated for urgency and potential safety impact.
+
+- **Priority Scoring**  
+  AI-assisted prioritization helps authorities focus on high-impact complaints first.
+
+- **Department Routing**  
+  Complaints can be directed toward the appropriate civic department.
+
+- **Duplicate Complaint Handling**  
+  Similar complaints can be identified and managed to reduce repetitive work.
+
+- **Location-Aware Complaints**  
+  Reported locations can be associated with complaints for better civic operations and analysis.
+
+- **Analytics Dashboard**  
+  Complaint information can be viewed through summarized metrics and analytics.
+
+- **Security Monitoring**  
+  The platform integrates **Cyber Log Sentinel** as a security layer for monitoring application activity and identifying suspicious behavior.
+
+---
+
+## Cybersecurity Integration
+
+Security is integrated into the SmartCivic AI platform as an additional monitoring layer.
+
+### Security Flow
+
+```text
+Application Activity
+        ↓
+Security Monitoring
+        ↓
+Log Sentinel
+        ↓
+Threat Detection
+        ↓
+Gemini Security Analysis
+        ↓
+Security Center
 
 
