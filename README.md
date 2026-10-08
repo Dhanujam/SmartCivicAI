@@ -113,3 +113,22 @@ SmartCivicAI/
    npm run dev
    ```
    The frontend will be available at `http://localhost:5173`.
+## 🧰 Technology Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite |
+| Styling | Tailwind CSS |
+| UI Icons | Lucide Icons |
+| HTTP Client | Axios |
+| Backend | Python, FastAPI |
+| Server | Uvicorn |
+| Validation | Pydantic |
+| Database | MongoDB Atlas |
+| Database Driver | Motor |
+| AI | Google Gemini API |
+| Maps | OpenStreetMap |
+| Security | Log Sentinel |
+| Deployment | Render |
+
+
