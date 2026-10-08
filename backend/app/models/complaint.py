@@ -122,6 +122,11 @@ class ComplaintResponse(BaseModel):
     sla_remaining_seconds: Optional[int] = None
     sla_remaining_text: Optional[str] = None
     sla_completed_late: Optional[bool] = False
+    # Cybersecurity Module: Security Telemetry & Privacy Flags
+    security_checked: Optional[bool] = True
+    prompt_injection_detected: Optional[bool] = False
+    xss_neutralized: Optional[bool] = False
+    pii_redacted: Optional[bool] = False
 
 
 class ComplaintMergeRequest(BaseModel):

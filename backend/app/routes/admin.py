@@ -62,6 +62,12 @@ def normalize_doc(doc: dict, master_complaint: Optional[dict] = None) -> dict:
     # Stretch Goal 2: SLA Computation & Enrichment
     enrich_complaint_dict(doc, master_complaint=master_complaint)
 
+    # Cybersecurity Module: Security Telemetry Flags
+    doc["security_checked"] = doc.get("security_checked", True)
+    doc["prompt_injection_detected"] = doc.get("prompt_injection_detected", False)
+    doc["xss_neutralized"] = doc.get("xss_neutralized", False)
+    doc["pii_redacted"] = doc.get("pii_redacted", False)
+
     return doc
 
 

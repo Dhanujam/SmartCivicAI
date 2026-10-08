@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   ShieldCheck,
+  ShieldAlert,
   FileText,
   LayoutDashboard,
   BarChart3,
@@ -106,6 +107,18 @@ export default function Navbar({ backendStatus }) {
               >
                 <BarChart3 className="w-3.5 h-3.5" />
                 <span>Analytics</span>
+              </Link>
+
+              <Link
+                to="/admin/security"
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                  isActive('/admin/security')
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'text-slate-300 hover:text-white hover:bg-slate-800'
+                }`}
+              >
+                <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
+                <span>Security SOC</span>
               </Link>
             </nav>
           )}

@@ -22,6 +22,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminComplaintsPage from './pages/admin/AdminComplaintsPage';
 import AdminComplaintDetailPage from './pages/admin/AdminComplaintDetailPage';
 import AdminAnalyticsPage from './pages/admin/AdminAnalyticsPage';
+import AdminSecurityPage from './pages/admin/AdminSecurityPage';
 
 import { Loader2 } from 'lucide-react';
 
@@ -156,6 +157,14 @@ function MainApp() {
             element={
               <ProtectedRoute allowedRoles={['ADMIN']}>
                 <AdminAnalyticsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/security"
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN']}>
+                <AdminSecurityPage />
               </ProtectedRoute>
             }
           />

@@ -108,6 +108,32 @@ export const api = {
     const res = await apiClient.get('/api/analytics/summary');
     return res.data;
   },
+
+  // Cybersecurity Module
+  getSecurityStatus: async () => {
+    const res = await apiClient.get('/api/security/status');
+    return res.data;
+  },
+
+  getSecurityMetrics: async () => {
+    const res = await apiClient.get('/api/admin/security/metrics');
+    return res.data;
+  },
+
+  getSecurityLogs: async (params = {}) => {
+    const res = await apiClient.get('/api/admin/security/logs', { params });
+    return res.data;
+  },
+
+  testSecurityPayload: async (data) => {
+    const res = await apiClient.post('/api/admin/security/test-payload', data);
+    return res.data;
+  },
+
+  clearSecurityLogs: async () => {
+    const res = await apiClient.delete('/api/admin/security/logs');
+    return res.data;
+  },
 };
 
 export default api;

@@ -997,7 +997,7 @@ export default function ComplaintForm({ onSuccess }) {
           <div className="pt-3 border-t border-slate-800/60 flex flex-wrap items-center justify-between text-[11px] text-slate-500 gap-2">
             <span className="flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-              Citizen Privacy Protected • MongoDB Atlas Encrypted
+              Cybersecurity Shield Active • AI Prompt Firewall • DPDP PII Protection
             </span>
             <span className="flex items-center gap-1">
               <Sparkles className="w-3.5 h-3.5 text-sky-400" />

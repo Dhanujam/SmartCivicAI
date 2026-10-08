@@ -2,11 +2,18 @@
 node_modules/
 .venv/
 venv/
+env/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Environment variables & secrets
+.env
+.env.*
 *.env
 !.env.example
+!backend/.env.example
+!frontend/.env.example
 
 # Build outputs
 dist/
@@ -16,6 +23,9 @@ build/
 # Uploads & temporary files
 uploads/*
 !uploads/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
 *.log
 .DS_Store
 Thumbs.db
+

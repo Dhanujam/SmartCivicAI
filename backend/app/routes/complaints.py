@@ -5,7 +5,7 @@ import logging
 from datetime import datetime, timezone
 from typing import List, Optional
 from bson import ObjectId
-from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends, status as http_status
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form, Depends, Request, status as http_status
 
 from app.models.complaint import ComplaintResponse, ComplaintStatusUpdate
 from app.database import get_complaints_collection, get_next_complaint_id
@@ -14,6 +14,15 @@ from app.services.gemini import analyze_complaint, GeminiConfigurationError, Gem
 from app.services.auth import get_current_user, get_optional_current_user
 from app.services.duplicate import detect_duplicates
 from app.services.sla import get_sla_hours, calculate_sla_due_at, enrich_complaint_dict
+from app.services.security import (
+    scan_prompt_injection,
+    sanitize_prompt_text,
+    scan_and_sanitize_xss,
+    scan_and_mask_pii,
+    verify_image_magic_bytes,
+    complaint_rate_limiter,
+    log_security_event,
+)
 
 logger = logging.getLogger("smartcivic.routes.complaints")
 
@@ -89,6 +98,12 @@ def normalize_doc(doc: dict, master_complaint: Optional[dict] = None) -> dict:
 
     # Stretch Goal 2: Prototype SLA computation and field enrichment
     enrich_complaint_dict(doc, master_complaint=master_complaint)
+
+    # Cybersecurity Module: Security Telemetry Flags
+    doc["security_checked"] = doc.get("security_checked", True)
+    doc["prompt_injection_detected"] = doc.get("prompt_injection_detected", False)
+    doc["xss_neutralized"] = doc.get("xss_neutralized", False)
+    doc["pii_redacted"] = doc.get("pii_redacted", False)
 
     return doc
 
@@ -166,6 +181,7 @@ async def list_complaints(
 
 @router.post("", response_model=ComplaintResponse, status_code=http_status.HTTP_201_CREATED)
 async def submit_complaint(
+    request: Request,
     description: str = Form(..., description="Detailed description of civic issue"),
     citizen_name: Optional[str] = Form("Anonymous"),
     citizen_contact: Optional[str] = Form(None),
@@ -177,16 +193,83 @@ async def submit_complaint(
 ):
     """
     Citizen complaint submission endpoint.
-    Processes multipart upload, executes Gemini AI multimodal triage,
-    performs duplicate detection, links authenticated citizen ID,
-    and inserts the validated document into MongoDB Atlas.
+    Protected by Cybersecurity Shield:
+    - Sliding-window rate limiting & abuse mitigation
+    - Anti-XSS and dangerous script sanitization
+    - AI Prompt Injection & LLM jailbreak firewall
+    - Deep binary magic-bytes image upload inspection
+    - Automated citizen PII masking (DPDP/GDPR compliance)
+    - Multimodal Gemini AI triage, duplicate detection, and SLA calculation
     """
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    user_id = current_user.get("id") if current_user else None
+    rate_key = user_id or client_ip
+
+    # 1. Rate Limiting Check
+    allowed, remaining, reset_sec = complaint_rate_limiter.is_allowed(rate_key, max_requests=25, window_seconds=60)
+    if not allowed:
+        await log_security_event(
+            event_type="RATE_LIMIT_EXCEEDED",
+            severity="MEDIUM",
+            details=f"Complaint submission rate limit triggered for {rate_key}",
+            client_ip=client_ip,
+            user_id=user_id,
+            endpoint="/api/complaints",
+            mitigation="HTTP_429_TOO_MANY_REQUESTS",
+        )
+        raise HTTPException(
+            status_code=http_status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Rate limit exceeded. Please wait {reset_sec} seconds before submitting again.",
+        )
+
     description_clean = description.strip() if description else ""
     if not description_clean:
         raise HTTPException(
             status_code=http_status.HTTP_400_BAD_REQUEST,
             detail="Complaint description cannot be empty.",
         )
+
+    # 2. XSS & Dangerous HTML Sanitization
+    clean_desc, has_xss, xss_patterns = scan_and_sanitize_xss(description_clean)
+    if has_xss:
+        await log_security_event(
+            event_type="XSS_PAYLOAD_NEUTRALIZED",
+            severity="HIGH",
+            details=f"XSS payload intercepted in complaint description: {xss_patterns}",
+            client_ip=client_ip,
+            user_id=user_id,
+            endpoint="/api/complaints",
+            mitigation="HTML_STRIPPED_AND_ENTITIES_ENCODED",
+        )
+    description_clean = clean_desc
+
+    # 3. AI Prompt Injection Defense
+    is_injection, injection_score, injection_patterns = scan_prompt_injection(description_clean)
+    if is_injection:
+        await log_security_event(
+            event_type="PROMPT_INJECTION_ATTEMPT",
+            severity="HIGH",
+            details=f"Prompt injection pattern detected (Risk score {injection_score}): {injection_patterns}",
+            client_ip=client_ip,
+            user_id=user_id,
+            endpoint="/api/complaints",
+            mitigation="PROMPT_DIRECTIVES_NEUTRALIZED_AND_ISOLATED",
+        )
+        description_clean = sanitize_prompt_text(description_clean)
+
+    # 4. PII Detection and Privacy Protection
+    masked_desc, pii_found, pii_items = scan_and_mask_pii(description_clean)
+    if pii_found:
+        await log_security_event(
+            event_type="PII_DETECTED_REDACTED",
+            severity="MEDIUM",
+            details=f"Sensitive citizen PII automatically masked: {[i['type'] for i in pii_items]}",
+            client_ip=client_ip,
+            user_id=user_id,
+            endpoint="/api/complaints",
+            mitigation="PII_DIGITS_MASKED_FOR_PRIVACY",
+        )
+        description_clean = masked_desc
 
     image_bytes: Optional[bytes] = None
     image_mime_type: Optional[str] = None
@@ -217,6 +300,23 @@ async def submit_complaint(
 
         image_mime_type = content_type if content_type in ALLOWED_MIME_TYPES else "image/jpeg"
 
+        # 5. Deep Binary Magic Bytes Inspection
+        is_valid_magic, magic_msg = verify_image_magic_bytes(image_bytes, image_mime_type)
+        if not is_valid_magic:
+            await log_security_event(
+                event_type="MALICIOUS_FILE_BLOCKED",
+                severity="CRITICAL",
+                details=f"Blocked uploaded file binary mismatch: {magic_msg} (file: {image.filename})",
+                client_ip=client_ip,
+                user_id=user_id,
+                endpoint="/api/complaints",
+                mitigation="REJECTED_WITH_HTTP_400",
+            )
+            raise HTTPException(
+                status_code=http_status.HTTP_400_BAD_REQUEST,
+                detail=f"Security check failed: {magic_msg}",
+            )
+
         raw_name = os.path.basename(image.filename)
         clean_name = re.sub(r"[^a-zA-Z0-9_.-]", "_", raw_name)
         unique_filename = f"{uuid.uuid4().hex}_{clean_name}"
@@ -230,7 +330,7 @@ async def submit_complaint(
         image_url = f"/uploads/{unique_filename}"
         logger.info("Persisted uploaded image to %s", file_path)
 
-    # 1. Run Gemini multimodal AI analysis
+    # 6. Run Gemini multimodal AI analysis
     try:
         ai_analysis = await analyze_complaint(
             description=description_clean,
@@ -306,6 +406,11 @@ async def submit_complaint(
         "sla_due_at": sla_due_at,
         "sla_status": "WITHIN_SLA",
         "sla_breached_at": None,
+        # Cybersecurity Module: Security Telemetry & Privacy Flags
+        "security_checked": True,
+        "prompt_injection_detected": is_injection,
+        "xss_neutralized": has_xss,
+        "pii_redacted": pii_found,
     }
 
     try:

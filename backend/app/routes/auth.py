@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime, timezone
-from fastapi import APIRouter, HTTPException, Depends, status as http_status
+from fastapi import APIRouter, HTTPException, Depends, Request, status as http_status
 
 from app.models.user import UserRegister, UserLogin, UserResponse, TokenResponse
 from app.database import get_users_collection
@@ -10,6 +10,7 @@ from app.services.auth import (
     create_access_token,
     get_current_user,
 )
+from app.services.security import auth_rate_limiter, log_security_event
 
 logger = logging.getLogger("smartcivic.routes.auth")
 
@@ -96,11 +97,31 @@ async def register_user(data: UserRegister):
 
 
 @router.post("/login", response_model=TokenResponse)
-async def login_user(data: UserLogin):
+async def login_user(data: UserLogin, request: Request):
     """
     Authenticate user (Citizen or Government Official) and return JWT access token.
     Backend determines role; frontend does not dictate permissions.
+    Protected by brute-force rate limiter and security audit logging.
     """
+    client_ip = request.client.host if request.client else "127.0.0.1"
+
+    # Rate limiting: max 10 login attempts per 60 seconds per IP
+    allowed, remaining, reset_sec = auth_rate_limiter.is_allowed(client_ip, max_requests=10, window_seconds=60)
+    if not allowed:
+        await log_security_event(
+            event_type="RATE_LIMIT_EXCEEDED",
+            severity="HIGH",
+            details=f"Brute-force protection: Exceeded login attempts from IP {client_ip}",
+            client_ip=client_ip,
+            user_email=data.email,
+            endpoint="/api/auth/login",
+            mitigation="HTTP_429_TOO_MANY_REQUESTS",
+        )
+        raise HTTPException(
+            status_code=http_status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"Too many login attempts. Please wait {reset_sec} seconds before trying again.",
+        )
+
     users = get_users_collection()
     if users is None:
         raise HTTPException(
@@ -113,6 +134,15 @@ async def login_user(data: UserLogin):
 
     if not user_doc or not verify_password(data.password, user_doc.get("password_hash", "")):
         logger.warning("Failed login attempt for email: %s", clean_email)
+        await log_security_event(
+            event_type="FAILED_LOGIN_ATTEMPT",
+            severity="MEDIUM",
+            details=f"Failed login attempt for email {clean_email}",
+            client_ip=client_ip,
+            user_email=clean_email,
+            endpoint="/api/auth/login",
+            mitigation="REJECTED_WITH_HTTP_401",
+        )
         raise HTTPException(
             status_code=http_status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password.",
