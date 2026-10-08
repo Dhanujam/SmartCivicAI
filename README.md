@@ -226,6 +226,7 @@ Department Assignment
 Government Dashboard
        ↓
 Faster Civic Resolution
+```
 
 ## Project Highlights
 
