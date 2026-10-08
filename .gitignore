@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+!.env.example
+
+# Build outputs
+dist/
+build/
+.dist/
+
+# Uploads & temporary files
+uploads/*
+!uploads/.gitkeep
+*.log
+.DS_Store
+Thumbs.db
