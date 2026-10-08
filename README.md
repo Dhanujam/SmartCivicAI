@@ -311,7 +311,37 @@ SmartCivic AI is prepared for production deployment on **Render**:
                       │  (Cloud Database)│   │ (Multimodal API) │
                       └──────────────────┘   └──────────────────┘
 ```
+## 🏗️ System Architecture
 
+```mermaid
+flowchart LR
+    A["👤 Citizen<br/>Text • Photo • Voice"] --> B["🌐 React Frontend"]
+
+    B --> C["⚙️ Backend API<br/>Node.js + Express"]
+
+    C --> D["🤖 AI Complaint Triage<br/>Category • Severity • Priority"]
+
+    C --> E["🛡️ Cyber Defense<br/>Spam • Rate Limiting<br/>Anomaly Detection"]
+
+    D --> F["🔗 Duplicate Detection"]
+    E --> F
+
+    F --> G[("🗄️ MongoDB Atlas<br/>Complaints • Locations")]
+
+    G --> H["🏢 Officer Dashboard<br/>Department Routing • SLA"]
+
+    H --> I["📊 Admin Dashboard<br/>Threat Alerts • Audit Logs"]
+
+    H --> J["📱 Citizen Status Tracking"]
+
+    style A fill:#172554,stroke:#60a5fa,color:#fff
+    style D fill:#14532d,stroke:#4ade80,color:#fff
+    style E fill:#7f1d1d,stroke:#f87171,color:#fff
+    style G fill:#422006,stroke:#fbbf24,color:#fff
+    style I fill:#312e81,stroke:#a5b4fc,color:#fff
+```
+
+**Complaint flow:** Submit → AI triage → Cybersecurity checks → Duplicate detection → Department assignment → SLA monitoring → Resolution tracking.
 ### Component Architecture:
 1. **Frontend**: Render Static Site
    - **Build Command**: `npm install && npm run build`
