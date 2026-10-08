@@ -182,4 +182,47 @@ Gemini Security Analysis
         ↓
 Security Center
 
+## Problem
 
+Municipal grievance portals receive large numbers of unstructured complaints every day.
+
+Complaints may contain:
+
+- Free-form text
+- Photographs
+- Different languages
+- Incomplete location information
+- Repeated reports of the same issue
+
+Traditional manual processing requires staff to read, classify, prioritize, and route each complaint individually.
+
+This can result in:
+
+- Delayed responses
+- Incorrect department routing
+- Repeated manual work
+- Important safety issues being overlooked
+- Duplicate complaints
+
+---
+
+## Our Solution
+
+SmartCivic AI introduces an intelligent AI-based triage layer between citizens and civic authorities.
+
+```text
+Citizen Complaint
+       ↓
+Text + Image Analysis
+       ↓
+Gemini AI
+       ↓
+Category + Urgency + Safety
+       ↓
+Priority Evaluation
+       ↓
+Department Assignment
+       ↓
+Government Dashboard
+       ↓
+Faster Civic Resolution
