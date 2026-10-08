@@ -181,7 +181,7 @@ Threat Detection
 Gemini Security Analysis
         ↓
 Security Center
-
+```
 ## Problem
 
 Municipal grievance portals receive large numbers of unstructured complaints every day.
@@ -226,3 +226,25 @@ Department Assignment
 Government Dashboard
        ↓
 Faster Civic Resolution
+
+## Project Highlights
+
+- AI-powered analysis of text and image-based civic complaints
+- Automated classification, urgency assessment, and prioritization
+- Intelligent routing of complaints to relevant departments
+- Duplicate complaint detection to reduce repetitive work
+- Location-aware civic issue management
+- Analytics dashboard for government officials
+- Integrated Cyber Log Sentinel security monitoring
+- Gemini-assisted analysis of detected security incidents
+- Modular and scalable web application architecture
+
+## Live Prototype
+
+[View SmartCivic AI Prototype](YOUR_PROTOTYPE_LINK)
+
+## Conclusion
+
+SmartCivic AI transforms traditional civic complaint handling into an intelligent, AI-assisted workflow. By combining multimodal complaint analysis, automated prioritization, department routing, duplicate detection, analytics, and integrated security monitoring, the platform helps civic authorities respond to issues more efficiently.
+
+The project demonstrates how AI can bridge the gap between citizen reporting and effective civic action, creating a smarter, faster, and more responsive civic service ecosystem.
