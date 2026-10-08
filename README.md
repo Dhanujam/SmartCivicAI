@@ -8,7 +8,7 @@ Built with **Defense-in-Depth** security principles, SmartCivic AI safeguards mu
 
 ---
 
-## 📌 Problem Statement
+##  Problem Statement
 
 Municipal grievance portals receive large numbers of unstructured complaints every day. Traditional manual processing requires staff to read, classify, prioritize, and route each complaint individually.
 
@@ -28,7 +28,7 @@ Complaints may contain:
 
 ---
 
-## 💡 Our Solution & System Workflow
+##  Our Solution & System Workflow
 
 SmartCivic AI introduces an intelligent, secure, AI-powered triage layer between citizens and civic authorities.
 
@@ -48,7 +48,7 @@ Civic Field Crew Action & Verified Citizen Resolution
 
 ---
 
-## 🏛️ Key Features & Platform Modules
+##  Key Features & Platform Modules
 
 ### 1. Citizen Portal
 - **Complaint Submission**: Citizen-friendly submission interface supporting descriptions, locations, and photographic evidence.
@@ -116,7 +116,7 @@ Security Operations Center (SOC Dashboard)
 
 ---
 
-## 🧪 Verified Test Results
+##  Verified Test Results
 
 The entire platform has undergone automated local validation:
 
@@ -130,7 +130,7 @@ The entire platform has undergone automated local validation:
 
 ---
 
-## 🏗️ Architecture & Technology Stack
+##  Architecture & Technology Stack
 
 | Layer | Technology | Description |
 |---|---|---|
@@ -149,7 +149,7 @@ The entire platform has undergone automated local validation:
 
 ---
 
-## 📁 Project Directory Structure
+##  Project Directory Structure
 
 ```
 SmartCivicAI/
@@ -311,28 +311,28 @@ SmartCivic AI is prepared for production deployment on **Render**:
                       │  (Cloud Database)│   │ (Multimodal API) │
                       └──────────────────┘   └──────────────────┘
 ```
-## 🏗️ System Architecture
+##  System Architecture
 
 ```mermaid
 flowchart LR
-    A["👤 Citizen<br/>Text • Photo • Voice"] --> B["🌐 React Frontend"]
+    A[" Citizen<br/>Text • Photo • Voice"] --> B[" React Frontend"]
 
-    B --> C["⚙️ Backend API<br/>Node.js + Express"]
+    B --> C[" Backend API<br/>Node.js + Express"]
 
-    C --> D["🤖 AI Complaint Triage<br/>Category • Severity • Priority"]
+    C --> D[" AI Complaint Triage<br/>Category • Severity • Priority"]
 
-    C --> E["🛡️ Cyber Defense<br/>Spam • Rate Limiting<br/>Anomaly Detection"]
+    C --> E[" Cyber Defense<br/>Spam • Rate Limiting<br/>Anomaly Detection"]
 
-    D --> F["🔗 Duplicate Detection"]
+    D --> F[" Duplicate Detection"]
     E --> F
 
-    F --> G[("🗄️ MongoDB Atlas<br/>Complaints • Locations")]
+    F --> G[(" MongoDB Atlas<br/>Complaints • Locations")]
 
-    G --> H["🏢 Officer Dashboard<br/>Department Routing • SLA"]
+    G --> H[" Officer Dashboard<br/>Department Routing • SLA"]
 
-    H --> I["📊 Admin Dashboard<br/>Threat Alerts • Audit Logs"]
+    H --> I[" Admin Dashboard<br/>Threat Alerts • Audit Logs"]
 
-    H --> J["📱 Citizen Status Tracking"]
+    H --> J["Citizen Status Tracking"]
 
     style A fill:#172554,stroke:#60a5fa,color:#fff
     style D fill:#14532d,stroke:#4ade80,color:#fff
@@ -375,7 +375,7 @@ flowchart LR
 
 ---
 
-## 🌟 Project Highlights
+##  Project Highlights
 
 - **AI-Powered Multimodal Triage**: Evaluates text and image-based civic complaints using Google Gemini.
 - **Automated Prioritization**: Instant urgency grading, 0-100 priority scoring, and field crew action plans.
@@ -388,13 +388,13 @@ flowchart LR
 
 ---
 
-## 🌐 Live Prototype
+##  Live Prototype
 
 - [SmartCivic AI Live Prototype](YOUR_PROTOTYPE_LINK)
 
 ---
 
-## 🎯 Conclusion
+##  Conclusion
 
 SmartCivic AI transforms traditional civic complaint handling into an intelligent, AI-assisted, and security-hardened workflow. By combining multimodal complaint analysis, automated prioritization, department routing, duplicate detection, SLA enforcement, and integrated cybersecurity monitoring, the platform empowers civic authorities to respond to citizen issues faster and with greater accountability.
 
@@ -402,5 +402,5 @@ The project demonstrates how artificial intelligence and defense-in-depth engine
 
 ---
 
-## 📄 License
+## License
 This project is developed for the Smart India / Civic Hackathon initiative under problem statement **HN-AI-02**.
