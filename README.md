@@ -219,7 +219,7 @@ SmartCivicAI/
 
 ---
 
-## 🚀 Setup & Local Development
+##  Setup & Local Development
 
 ### Prerequisites
 - Node.js (v20+ or v22+)
@@ -289,7 +289,7 @@ SmartCivicAI/
 
 ---
 
-## ☁️ Planned Deployment Architecture (Render + MongoDB Atlas)
+##  Planned Deployment Architecture (Render + MongoDB Atlas)
 
 SmartCivic AI is prepared for production deployment on **Render**:
 
