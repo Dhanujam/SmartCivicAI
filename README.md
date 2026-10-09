@@ -390,7 +390,7 @@ flowchart LR
 
 ##  Live Prototype
 
-- [SmartCivic AI Live Prototype](YOUR_PROTOTYPE_LINK)
+- [SmartCivic AI Live Prototype](https://smartcivic-ai.onrender.com/)
 
 ---
 
